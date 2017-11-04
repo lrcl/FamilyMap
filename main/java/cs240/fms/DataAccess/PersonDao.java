@@ -49,7 +49,34 @@ public class PersonDao {
             addPerson(person);
         }
     }
-
+    //updates existing person in database
+    public void updateMotherId(String motherId, Person person) {
+        PreparedStatement statement = null;
+        try {
+            String update = "update Person set motherId = ? where personId = ?";
+            statement = connection.prepareStatement(update);
+            statement.setString(1, motherId);
+            statement.setString(2, person.getPersonID());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //updates existing person in database
+    public void updateFatherId(String fatherId, Person person) {
+        PreparedStatement statement = null;
+        try{
+            String update = "update Person set father Id = ? where personId = ?";
+            statement = connection.prepareStatement(update);
+            statement.setString(1, fatherId);
+            statement.setString(2, person.getPersonID());
+            statement.executeUpdate();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     /** Removes a Person from row in Person table, throws exception if Person does not exist
      * @param person
      * @throws Exception

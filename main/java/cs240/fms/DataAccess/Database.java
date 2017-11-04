@@ -38,5 +38,27 @@ public class Database {
             throw new Exception("closeConnection failed", e);
         }
     }
+    //create tables
+    //drop all tables --can I reuse the statement to do multiple sql statements?
+    public void dropAllTables(Connection connection) {
+        PreparedStatement statement = null;
+        try{
+            statement = connection.prepareStatement("drop if exists Person");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("drop if exists Event");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("drop if exists User");
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement("drop if exists UserAuth");
+            statement.executeUpdate();
+
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public Database() {}
 }

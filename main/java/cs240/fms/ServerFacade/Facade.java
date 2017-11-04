@@ -85,7 +85,12 @@ public class Facade {
     /** Clears all information from database
      *
      */
-    public void clear() {}
+    public void clear() {
+        Database db = new Database();
+        Connection connection = null;
+        connection = db.openConnection(connection);
+        db.dropAllTables(connection);
+    }
 
     /** Popluates the database with generated information for the given, existing username
      * @param fillInfo
@@ -114,10 +119,34 @@ public class Facade {
         Generator g = new Generator();
         Person p1 = g.createPersonFromUser(existingUser);
         BlockingQueue<Person> persons = new LinkedBlockingQueue<Person>();
+        persons.add(p1);
+        int i = 32;
+        while(i > 0) {
+            try {
+                Person child = persons.take();
+                pd.addPerson(child);
 
+                Person mother = g.createPersonFromFile(username, "f");
+                Person father = g.createPersonFromFile(username, "m");
 
+                mother.setSpouseID(father.getPersonID());
+                father.setSpouseID(mother.getPersonID());
 
+                pd.updateMotherId(mother.getPersonID(), child);
+                pd.updateFatherId(father.getPersonID(), child);
 
+                pd.addPerson(mother);
+                pd.addPerson(father);
+
+                persons.add(mother);
+                persons.add(father);
+                i -= 2; //correct decrementation?
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
         //generate events for the created couples and for user
         //add events to db
     }
