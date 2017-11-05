@@ -2,7 +2,7 @@ package cs240.fms.ServerFacade.DataHandling;
 
 
 public class Main {
-    public static void main(){
+    public static void main(String[] args){
         Generator g = new Generator();
         g.loadData();
         if(g.femaleNames != null) {

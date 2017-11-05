@@ -4,15 +4,18 @@ package cs240.fms.ServerFacade.DataHandling;
 import cs240.fms.Models.*;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
 public class Generator {
-    private FemaleName femaleNames;
-    private MaleName maleNames;
-    private Location locations;
-    private LastName lastNames;
+    protected FemaleName femaleNames;
+    protected MaleName maleNames;
+    protected Location locations;
+    protected LastName lastNames;
 
     public void loadData() {
 
@@ -68,33 +71,110 @@ public class Generator {
         String Id = longId.substring(0,7);
         return Id;
     }
-    public ArrayList createCouple(String username) {
-        Person female = createPersonFromFile(username, "f");
-        Person male = createPersonFromFile(username, "m");
-        female.setSpouseID(male.getPersonID());
-        male.setSpouseID(female.getPersonID());
-        ArrayList<Person> couple = new ArrayList<Person>();
-        couple.add(female);
-        couple.add(male);
+    public Event createBirth(int gen, String username, String personId) {
+        //birth year
+        Random r = new Random();
+        int offset = r.nextInt(6);
+        int year = 1990 - (gen*20) + offset;
 
-        return couple;
+        //location
+        r = new Random();
+        int index = r.nextInt(locations.data.length-1);
+        String country = getCountry(locations.data[index]);
+        String city = getCity(locations.data[index]);
+        Double lat = getLat(locations.data[index]);
+        Double longit = getLong(locations.data[index]);
+
+        //type
+        String type = "birth";
+        //eventId
+        String eventId = createId();
+
+        Event birth = new Event(eventId,username,personId,lat,longit,country,city,type,year);
+        return birth;
     }
-    public ArrayList connectToParents(ArrayList<Person> recentGen, ArrayList<Person> oldGen) {
-        //Each array passed in should be of size 2, with female
+    public Event createMarriage(int gen, String username, String personId) {
+        //year
+        Random r = new Random();
+        int offset = r.nextInt(6);
+        int year = 2010 - (gen * 20) + offset;
 
+        //location
+        r = new Random();
+        int index = r.nextInt(locations.data.length-1);
+        String country = getCountry(locations.data[index]);
+        String city = getCity(locations.data[index]);
+        Double lat = getLat(locations.data[index]);
+        Double longit = getLong(locations.data[index]);
 
-        return null;
+        //type
+        String type = "marriage";
+        //eventId
+        String eventId = createId();
+
+        Event marriage = new Event(eventId,username,personId,lat,longit,country,city,type,year);
+        return marriage;
     }
-    public Event createBirth() {
+    public Event createDeathDate(int gen, String username, String personId) {
+        //year
+        Random r = new Random();
+        int offset = r.nextInt(6);
+        int year = 2030 - (gen * 20) + offset;
 
-        return null;
+        //location
+        r = new Random();
+        int index = r.nextInt(locations.data.length-1);
+        String country = getCountry(locations.data[index]);
+        String city = getCity(locations.data[index]);
+        Double lat = getLat(locations.data[index]);
+        Double longit = getLong(locations.data[index]);
+
+        //type
+        String type = "death";
+        //eventId
+        String eventId = createId();
+
+        Event death = new Event(eventId,username,personId,lat,longit,country,city,type,year);
+        return death;
     }
-    public Event createMarriage() {
-
-        return null;
+    public String getCountry(String jsonStr) {
+        try {
+            JSONObject json = new JSONObject(jsonStr);
+            String country = json.getString("country");
+            return country;
+        } catch (JSONException je) {
+            je.printStackTrace();
+            return "";
+        }
     }
-    public Event createDeathDate() {
-
-        return null;
+    public String getCity(String jsonStr) {
+        try{
+            JSONObject json = new JSONObject(jsonStr);
+            String city = json.getString("city");
+            return city;
+        } catch (JSONException je) {
+            je.printStackTrace();
+            return "";
+        }
+    }
+    public Double getLat(String js) {
+        try{
+            JSONObject json = new JSONObject(js);
+            Double lat = json.getDouble("latitude");
+            return lat;
+        } catch(JSONException je) {
+            je.printStackTrace();
+            return -3.3;
+        }
+    }
+    public Double getLong(String js) {
+        try{
+            JSONObject json = new JSONObject(js);
+            Double longit = json.getDouble("longitude");
+            return longit;
+        } catch (JSONException je) {
+            je.printStackTrace();
+            return -3.3;
+        }
     }
 }

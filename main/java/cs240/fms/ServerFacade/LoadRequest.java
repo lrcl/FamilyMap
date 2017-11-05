@@ -8,18 +8,18 @@ import java.util.ArrayList;
 
 public class LoadRequest {
    /** Array list of User objects to be loaded into database */
-   private ArrayList<User> users;
+   private User[] users;
    /** Array list of Person objects to be loaded into database */
-   private ArrayList<Person> persons;
+   private Person[] persons;
    /** Array list of Event objects to be loaded into database */
-   private ArrayList<Event> events;
+   private Event[] events;
 
    /**Constructor
     * @param users
     * @param persons
     * @param events
     */
-   public LoadRequest(ArrayList<User> users, ArrayList<Person> persons, ArrayList<Event> events) {
+   public LoadRequest(User[] users, Person[] persons, Event[] events) {
        this.users = users;
        this.persons = persons;
        this.events = events;

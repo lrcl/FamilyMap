@@ -4,6 +4,7 @@ package cs240.fms.ServerFacade;
 import android.support.annotation.NonNull;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.AbstractQueue;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +21,7 @@ import cs240.fms.DataAccess.EventDao;
 import cs240.fms.DataAccess.PersonDao;
 import cs240.fms.DataAccess.UserAuthDao;
 import cs240.fms.DataAccess.UserDao;
+import cs240.fms.Models.Event;
 import cs240.fms.Models.Person;
 import cs240.fms.Models.User;
 import cs240.fms.Models.UserAuth;
@@ -96,8 +98,7 @@ public class Facade {
      * @param fillInfo
      */
     public void fill(FillRequest fillInfo) {
-        //make sure user is registered?
-        //clear all events, and people from db that are associated with the given username
+
         Database db = new Database();
         Connection connection = null;
         connection = db.openConnection(connection);
@@ -115,34 +116,65 @@ public class Facade {
         //remove Events associated with username
         EventDao ed = new EventDao(connection);
         ed.removeAllEvents(username);
-        //queue
+        //queue up: generate and connect people
         Generator g = new Generator();
+        g.loadData();
         Person p1 = g.createPersonFromUser(existingUser);
-        BlockingQueue<Person> persons = new LinkedBlockingQueue<Person>();
-        persons.add(p1);
-        int i = 32;
-        while(i > 0) {
+        BlockingQueue<Person> personQueue = new LinkedBlockingQueue<Person>();
+        personQueue.add(p1);
+        //create events for person1
+        //get needed total person count based on #of desired generations
+        int sum = peopleSum(fillInfo.getGenerations());
+        int i = 1;
+        int gen = 1;
+        while(i < sum) {
             try {
-                Person child = persons.take();
+                Person child = personQueue.take();
                 pd.addPerson(child);
 
                 Person mother = g.createPersonFromFile(username, "f");
                 Person father = g.createPersonFromFile(username, "m");
 
+                //match spouseIds
                 mother.setSpouseID(father.getPersonID());
                 father.setSpouseID(mother.getPersonID());
 
+                //birth events for each parent
+                Event birth1 = g.createBirth(gen, username, mother.getPersonID());
+                ed.addEvent(birth1);
+                Event birth2 = g.createBirth(gen, username, father.getPersonID());
+                ed.addEvent(birth2);
+                //mother and father have same marriage event
+                Event marriage = g.createMarriage(gen, username, mother.getPersonID());
+                Event marriage2 = new Event(marriage);
+                marriage2.setPersonID(father.getPersonID());
+                ed.addEvent(marriage);
+                ed.addEvent(marriage2);
+                //death events
+                Event death1 = g.createDeathDate(gen,username,mother.getPersonID());
+                ed.addEvent(death1);
+                Event death2 = g.createDeathDate(gen,username,father.getPersonID());
+                ed.addEvent(death2);
+
+                //update child info
                 pd.updateMotherId(mother.getPersonID(), child);
                 pd.updateFatherId(father.getPersonID(), child);
-
+                //add to database
                 pd.addPerson(mother);
                 pd.addPerson(father);
-
-                persons.add(mother);
-                persons.add(father);
-                i -= 2; //correct decrementation?
+                //put on queue
+                personQueue.add(mother);
+                personQueue.add(father);
+                i += 2;
+                if((double)i > Math.pow(2,(double)gen)){
+                    gen++;
+                }
 
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (SQLException es) {
+                es.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -150,18 +182,22 @@ public class Facade {
         //generate events for the created couples and for user
         //add events to db
     }
-    private ArrayList<Person> addToList(ArrayList<Person> couple) {
-        ArrayList<Person> personList = new ArrayList<Person>();
-        for(Person person: couple) {
-            personList.add(person);
+    private int peopleSum (int generations) {
+        double total = 0;
+        double gen = (double)generations;
+        for(int i = 0; i < gen+1; i++) {
+            total += Math.pow(2,gen);
         }
-        return personList;
+        int sum = (int)total;
+        return sum;
     }
 
     /** clears all data from database and loads new information about user, person and event
      * @param loadInfo
      */
-    public void load(LoadRequest loadInfo) {}
+    public void load(LoadRequest loadInfo) {
+
+    }
 
     /** returns the single Person object with the specified ID
      *

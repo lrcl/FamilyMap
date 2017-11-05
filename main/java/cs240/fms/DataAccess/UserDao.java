@@ -18,7 +18,6 @@ public class UserDao {
     public boolean addUser(User user) {
         PreparedStatement statement = null;
         try {
-            //openConnection();
             String insert = "insert into User values (?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(insert);
             statement.setString(1, user.getUsername());
@@ -30,7 +29,6 @@ public class UserDao {
             statement.setString(7, user.getPersonId());
             statement.executeUpdate();
             statement.close();
-            //closeConnection(true);
 
         } catch (SQLException e) {
             return false;
@@ -66,7 +64,7 @@ public class UserDao {
     /** adds multiple users to database
      * @param userList
      */
-    public void addAllUsers(ArrayList<User> userList) {
+    public void addAllUsers(User[] userList) {
         for(User user: userList) {
             addUser(user);
         }
@@ -129,7 +127,6 @@ public class UserDao {
             e.printStackTrace();
             return null;
         }
-        //closeConnection(false)
     }
 
     public UserDao(Connection connection) {

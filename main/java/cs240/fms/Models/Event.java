@@ -39,6 +39,10 @@ public class Event {
      */
     private int year;
 
+    public void setPersonID(String personID) {
+        this.personID = personID;
+    }
+
     /**
      * returns unique Id for event
      *
@@ -140,6 +144,17 @@ public class Event {
         this.city = city;
         this.eventType = eventType;
         this.year = year;
+    }
+    public Event(Event event){
+        this.eventID = event.eventID;
+        this.username = event.username;
+        this.personID = event.personID;
+        this.latitude = event.latitude;
+        this.longitude = event.longitude;
+        this.country = event.country;
+        this.city = event.city;
+        this.eventType = event.eventType;
+        this.year = event.year;
     }
 
 }

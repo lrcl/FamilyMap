@@ -44,7 +44,7 @@ public class PersonDao {
     /** Adds multiple persons to the database
      * @param personList
      */
-    public void addAllPersons(ArrayList<Person> personList) throws Exception{
+    public void addAllPersons(Person[] personList) throws Exception{
         for(Person person: personList) {
             addPerson(person);
         }
@@ -141,11 +141,8 @@ public class PersonDao {
             return queriedPerson;
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return null;
         }
-        statement.close();
-        rs.close();
-        //closeConnection(false);
-        return null;
     }
 
     public PersonDao(Connection connection) {

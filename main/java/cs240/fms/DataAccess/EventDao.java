@@ -42,7 +42,7 @@ public class EventDao {
      * Adds multiple events to table in database
      * @param eventList
      */
-    public void addAllEvents(ArrayList<Event> eventList) throws Exception {
+    public void addAllEvents(Event[] eventList) throws Exception {
         for(Event event: eventList) {
             addEvent(event);
         }
