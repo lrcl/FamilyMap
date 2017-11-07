@@ -15,7 +15,7 @@ public class EventDao {
      * Adds an event row to Event table in database
      * @param event
      */
-    public void addEvent(Event event) throws Exception{
+    public boolean addEvent(Event event) {
         PreparedStatement statement = null;
         try {
             String insert = "insert into Event values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -31,21 +31,28 @@ public class EventDao {
             statement.setInt(9, event.getYear());
             statement.executeUpdate();
             statement.close();
-            //closeConnection(true);
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     /**
      * Adds multiple events to table in database
      * @param eventList
      */
-    public void addAllEvents(Event[] eventList) throws Exception {
+    public boolean addAllEvents(Event[] eventList) {
+        boolean allAdded = true;
         for(Event event: eventList) {
-            addEvent(event);
+            if(!addEvent(event))
+                allAdded = false;
         }
+        return allAdded;
     }
 
     /**

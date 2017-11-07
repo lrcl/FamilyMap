@@ -1,6 +1,7 @@
 package cs240.fms.ServerFacade;
 
 
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
 import java.sql.Connection;
@@ -35,6 +36,8 @@ public class Facade {
      */
     public RegisterResponse register(RegisterRequest registerInfo) {
 
+        // TO DO: check to see if username is taken and if all info is present and correct ***************************
+
         User user = new User(registerInfo.getUsername(), registerInfo.getPassword(),registerInfo.getEmail(),registerInfo.getFirstName(),registerInfo.getLastName(),registerInfo.getGender(),"");
         Database database =  new Database();
         Connection connection = null;
@@ -64,6 +67,9 @@ public class Facade {
      * @return response
      */
     public RegisterResponse login(LoginRequest loginInfo) {
+
+        //TO DO: check to see if the user is registered****************************
+
         //generate authToken
         String longAuthToken = UUID.randomUUID().toString();
         String authToken = longAuthToken.substring(0,7);
@@ -97,18 +103,23 @@ public class Facade {
     /** Popluates the database with generated information for the given, existing username
      * @param fillInfo
      */
-    public void fill(FillRequest fillInfo) {
+    public boolean fill(FillRequest fillInfo) {
 
+        if(fillInfo.getGenerations() < 0) {
+            //invalid generation parameter
+            return false;
+        }
         Database db = new Database();
         Connection connection = null;
         connection = db.openConnection(connection);
         String username = fillInfo.getUsername();
-         //retrieve user (check if null?)
+
+         //retrieve user (check if null)
         UserDao ud = new UserDao(connection);
         User pseudoUser = new User(fillInfo.getUsername());
         User existingUser = ud.getUser(pseudoUser);
         if(existingUser == null) {
-            //do something?
+            return false;
         }
         //remove Persons associated with username
         PersonDao pd = new PersonDao(connection);
@@ -116,15 +127,31 @@ public class Facade {
         //remove Events associated with username
         EventDao ed = new EventDao(connection);
         ed.removeAllEvents(username);
-        //queue up: generate and connect people
+
+        //generate p1 and p1's events
         Generator g = new Generator();
         g.loadData();
         Person p1 = g.createPersonFromUser(existingUser);
+        Event p1Birth = g.createBirth(0, username, p1.getPersonID());
+        Event p1Marriage = g.createMarriage(0, username, p1.getPersonID());
+        try {
+            ed.addEvent(p1Birth);
+            ed.addEvent(p1Marriage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        //using a queue, create and match each generation of people with events
+        int sum = peopleSum(fillInfo.getGenerations());
+        if(matchPeopleWithEvents(g, pd, ed, username, p1, sum))
+            return false;
+
+        return true;
+    }
+    private boolean matchPeopleWithEvents(Generator g, PersonDao pd, EventDao ed, String username, Person p1, int sum){
+
         BlockingQueue<Person> personQueue = new LinkedBlockingQueue<Person>();
         personQueue.add(p1);
-        //create events for person1
-        //get needed total person count based on #of desired generations
-        int sum = peopleSum(fillInfo.getGenerations());
         int i = 1;
         int gen = 1;
         while(i < sum) {
@@ -172,15 +199,14 @@ public class Facade {
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (SQLException es) {
-                es.printStackTrace();
+                return false;
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
 
         }
-        //generate events for the created couples and for user
-        //add events to db
+        return true;
     }
     private int peopleSum (int generations) {
         double total = 0;
@@ -195,8 +221,36 @@ public class Facade {
     /** clears all data from database and loads new information about user, person and event
      * @param loadInfo
      */
-    public void load(LoadRequest loadInfo) {
+    public boolean load(LoadRequest loadInfo) {
+        //check for valid input
+        if(loadInfo.getEvents() == null)
+            return false;
+        if(loadInfo.getUsers() == null)
+            return false;
+        if(loadInfo.getPersons() == null)
+            return false;
 
+        boolean allAdded = true;
+        //clear all data from database
+        clear();
+       //open connection
+        Database db = new Database();
+        Connection connection = null;
+        connection = db.openConnection(connection);
+
+        UserDao ud = new UserDao(connection);
+        if(!ud.addAllUsers(loadInfo.getUsers()))
+            allAdded = false;
+
+        PersonDao pd = new PersonDao(connection);
+        if(!pd.addAllPersons(loadInfo.getPersons()))
+            allAdded = false;
+
+        EventDao ed = new EventDao(connection);
+        if(!ed.addAllEvents(loadInfo.getEvents()))
+            allAdded = false;
+
+        return allAdded;
     }
 
     /** returns the single Person object with the specified ID
@@ -205,14 +259,52 @@ public class Facade {
      * @param personID
      * @return person
      */
-    public PersonResponse findPerson(String authToken, String personID) {return null;}
+    public PersonResponse findPerson(String authToken, String personID) {
+
+        Database db = new Database();
+        Connection connection = null;
+        connection = db.openConnection(connection);
+        PersonDao pDao = new PersonDao(connection);
+        Person pseudoPerson = new Person(personID);
+        //check personId
+        Person person = pDao.getPerson(pseudoPerson);
+        if(person == null)
+            return null;
+        //check authToken
+        UserAuthDao uaDao = new UserAuthDao(connection);
+        UserAuth pseudoUa = new UserAuth(authToken);
+        UserAuth ua = uaDao.getUserAuth(pseudoUa);
+        if(ua == null)
+            return null;
+        //check if requested person belongs to user
+        if(!(ua.getUsername().equals(person.getDescendant())))
+            return null;
+        PersonResponse pr = new PersonResponse(person);
+        return pr;
+    }
 
     /** returns all family members of the current user. The current user is determined from the provided auth token
      *
      * @param authToken
      * @return allPersons
      */
-    public AllPersonsResponse findPersons(String authToken) {return null;}
+    public AllPersonsResponse findPersons(String authToken) {
+
+        Database db = new Database();
+        Connection connection = null;
+        connection = db.openConnection(connection);
+        //check authToken
+        UserAuthDao uaDao = new UserAuthDao(connection);
+        UserAuth pseudoUa = new UserAuth(authToken);
+        UserAuth ua = uaDao.getUserAuth(pseudoUa);
+        if(ua == null)
+            return null;
+
+
+
+
+        return null;
+    }
 
     /** returns single Event object with the specified event ID
      * @param eventId

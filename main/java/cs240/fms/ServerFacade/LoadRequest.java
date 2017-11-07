@@ -14,7 +14,19 @@ public class LoadRequest {
    /** Array list of Event objects to be loaded into database */
    private Event[] events;
 
-   /**Constructor
+    public User[] getUsers() {
+        return users;
+    }
+
+    public Person[] getPersons() {
+        return persons;
+    }
+
+    public Event[] getEvents() {
+        return events;
+    }
+
+    /**Constructor
     * @param users
     * @param persons
     * @param events

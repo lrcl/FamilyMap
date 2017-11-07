@@ -34,6 +34,7 @@ public class UserDao {
             return false;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     return true;
     }
@@ -64,10 +65,13 @@ public class UserDao {
     /** adds multiple users to database
      * @param userList
      */
-    public void addAllUsers(User[] userList) {
+    public boolean addAllUsers(User[] userList) {
+        boolean allAdded = true;
         for(User user: userList) {
-            addUser(user);
+            if(!addUser(user))
+                allAdded = false;
         }
+        return allAdded;
     }
 
     /** Removes a user from row in User table, throws exception if user does not exist

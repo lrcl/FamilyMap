@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 
 public class PersonDao {
@@ -16,7 +15,7 @@ public class PersonDao {
     /** Adds a person row to Person table in database
      * @param person
      */
-    public void addPerson(Person person) {
+    public boolean addPerson(Person person) {
         //should I check if this person already is in database?
         PreparedStatement statement = null;
         try {
@@ -33,21 +32,27 @@ public class PersonDao {
             statement.setString(8, person.getSpouseID());
             statement.executeUpdate();
             statement.close();
-            //closeConnection(true);
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         } catch (Exception ex) {
             ex.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     /** Adds multiple persons to the database
      * @param personList
      */
-    public void addAllPersons(Person[] personList) throws Exception{
+    public boolean addAllPersons(Person[] personList) {
+        boolean allAdded = true;
         for(Person person: personList) {
-            addPerson(person);
+            if(!addPerson(person))
+                allAdded = false;
         }
+        return allAdded;
     }
     //updates existing person in database
     public void updateMotherId(String motherId, Person person) {
@@ -114,7 +119,7 @@ public class PersonDao {
      * @throws Exception if person does not exist
      * @return person
      */
-    public Person getPerson(Person person) throws Exception {
+    public Person getPerson(Person person) {
         PreparedStatement statement = null;
         ResultSet rs = null;
         Person queriedPerson = null;
@@ -138,11 +143,18 @@ public class PersonDao {
             }
             statement.close();
             rs.close();
-            return queriedPerson;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
+        return queriedPerson;
+    }
+    public Person[] getAllPersons(String username) {
+
+        return null;
     }
 
     public PersonDao(Connection connection) {

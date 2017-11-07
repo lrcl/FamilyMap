@@ -33,5 +33,8 @@ public class UserAuth {
         this.authToken = authToken;
         this.username = username;
     }
+    public UserAuth(String authToken) {
+        this.authToken = authToken;
+    }
 
 }

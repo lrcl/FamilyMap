@@ -153,6 +153,8 @@ public class Person {
         this.motherID = motherID;
         this.spouseID = spouseID;
     }
-    public Person(){}
+    public Person(String personID){
+        this.personID = personID;
+    }
 
 }

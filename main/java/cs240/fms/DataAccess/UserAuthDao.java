@@ -19,7 +19,6 @@ public class UserAuthDao {
     public boolean addUserAuth(UserAuth userAuth) {
         PreparedStatement statement = null;
         try {
-            //openConnection();
             String insert = "insert into UserAuth values (?, ?)";
             statement = connection.prepareStatement(insert);
             statement.setString(1, userAuth.getAuthToken());
@@ -27,10 +26,9 @@ public class UserAuthDao {
             statement.executeUpdate();
             statement.close();
             return true;
-            //closeConnection(true);
         }
         catch (SQLException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
         catch (Exception e) {
@@ -66,12 +64,11 @@ public class UserAuthDao {
      * @throws Exception
      * @return userAuth
      */
-    public UserAuth getUserAuth(UserAuth userAuth) throws Exception {
+    public UserAuth getUserAuth(UserAuth userAuth) {
         PreparedStatement statement = null;
         ResultSet rs = null;
         UserAuth queriedUserAuth = null;
         try {
-            //openConnection();
             String queryAuthToken = userAuth.getAuthToken();
             statement = connection.prepareStatement("select * from UserAuth where authToken = ?");
             statement.setString(1, queryAuthToken);
@@ -80,19 +77,18 @@ public class UserAuthDao {
                 String authToken = rs.getString(1);
                 String username = rs.getString(2);
                 queriedUserAuth = new UserAuth(authToken, username);
-                //closeConnection(true);
             }
             rs.close();
             statement.close();
-            return queriedUserAuth;
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        rs.close();
-        statement.close();
-        //closeConnection(false);
-        return null;
+        return queriedUserAuth;
     }
     public UserAuthDao(Connection connection) {
         this.connection = connection;
