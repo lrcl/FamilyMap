@@ -78,7 +78,8 @@ public class Database {
                + ");";
        String createUserAuth = "create table if not exists UserAuth ("
                + "authToken text not null primary key,"
-               + "username text not null"
+               + "username text not null,"
+               + "foreign key(username) references User(username)"
                + ");";
         try {
             statement = connection.prepareStatement(createPerson);

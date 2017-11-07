@@ -42,7 +42,7 @@ public class UserAuthDao {
      * @param userAuth
      * @throws Exception
      */
-    public void removeUserAuth(UserAuth userAuth) throws Exception {
+    public boolean removeUserAuth(UserAuth userAuth) throws Exception {
         PreparedStatement statement = null;
         try {
             //openConnection();
@@ -51,11 +51,11 @@ public class UserAuthDao {
             statement.setString(1, userAuth.getAuthToken());
             statement.executeUpdate();
             statement.close();
-            //closeConnection(true);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        statement.close();
         //closeConnection(false);
     }
 
