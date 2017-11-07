@@ -57,24 +57,25 @@ public class EventDao {
 
     /**
      * Removes an Event from row in Event table throws exception if event doesn't exist
-     * @param event
+     * @param eventId
      * @throws Exception
      */
-    public void removeEvent(Event event) throws Exception {
+    public boolean removeEvent(String eventId) throws Exception {
         PreparedStatement statement = null;
         try {
             String delete = "delete from Event where eventId = ?";
             statement = connection.prepareStatement(delete);
-            statement.setString(1, event.getEventID());
+            statement.setString(1, eventId);
             statement.executeUpdate();
             statement.close();
-            //closeConnection(true);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
     //remove all events associated with the given username
-    public void removeAllEvents(String username) {
+    public boolean removeAllEvents(String username) {
         //will it be ok if there are none?
         PreparedStatement statement = null;
         try {
@@ -83,8 +84,10 @@ public class EventDao {
             statement.setString(1, username);
             statement.executeUpdate();
             statement.close();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
