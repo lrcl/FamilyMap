@@ -139,7 +139,7 @@ public class PersonDao {
                 String motherId = rs.getString(7);
                 String spouseId = rs.getString(8);
                 queriedPerson = new Person(personId, descendant, firstName, lastName, gender, fatherId, motherId, spouseId);
-                //closeConnection(true);
+                break; //do I need this?
             }
             statement.close();
             rs.close();
@@ -152,7 +152,22 @@ public class PersonDao {
         }
         return queriedPerson;
     }
+    //get all Person objects associated with the given username
     public Person[] getAllPersons(String username) {
+
+        PreparedStatement statement = null;
+        ResultSet rs =  null;
+        try {
+            statement = connection.prepareStatement("select * from Person where descendant = ?");
+            statement.setString(1, username);
+            rs = statement.executeQuery();
+            while(rs.next()) {
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
 
         return null;
     }

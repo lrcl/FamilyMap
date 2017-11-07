@@ -10,12 +10,6 @@ public class UserAuth {
     /** Username for which the token was created */
     private String username;
 
-    public String generateAuthToken() {
-        Random r = new Random();
-        int token = 10000000 + (int)(r.nextFloat() * 90000000);
-        String authToken = Integer.toString(token);
-        return authToken;  //set the member variable authoken to this?
-    }
     /** Get the Auth token
      * @return authToken
      */

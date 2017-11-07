@@ -118,7 +118,7 @@ public class UserDao {
                 String gender = rs.getString(6);
                 String personId = rs.getString(7);
                 queriedUser = new User(username, password, email, firstName, lastName, gender, personId);
-                //closeConnection(true);
+                break; //do I need this?
             }
             rs.close();
             statement.close();

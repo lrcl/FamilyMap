@@ -116,7 +116,7 @@ public class EventDao {
                 String eventType = rs.getString(8);
                 int year = rs.getInt(9);
                 queriedEvent = new Event(eventId, username, personId, latitude, longitude, country, city, eventType, year);
-                //closeConnection(true);
+                break;
             }
             statement.close();
             rs.close();

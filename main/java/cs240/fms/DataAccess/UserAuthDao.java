@@ -77,6 +77,7 @@ public class UserAuthDao {
                 String authToken = rs.getString(1);
                 String username = rs.getString(2);
                 queriedUserAuth = new UserAuth(authToken, username);
+                break;
             }
             rs.close();
             statement.close();
