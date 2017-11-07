@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class PersonDao {
@@ -135,7 +136,7 @@ public class PersonDao {
                 String firstName = rs.getString(3);
                 String lastName = rs.getString(4);
                 String gender = rs.getString(5);
-                String fatherId = rs.getString(6); //could be null?
+                String fatherId = rs.getString(6); //could be null
                 String motherId = rs.getString(7);
                 String spouseId = rs.getString(8);
                 queriedPerson = new Person(personId, descendant, firstName, lastName, gender, fatherId, motherId, spouseId);
@@ -154,7 +155,7 @@ public class PersonDao {
     }
     //get all Person objects associated with the given username
     public Person[] getAllPersons(String username) {
-
+        ArrayList<Person> personList = new ArrayList<Person>();
         PreparedStatement statement = null;
         ResultSet rs =  null;
         try {
@@ -162,14 +163,23 @@ public class PersonDao {
             statement.setString(1, username);
             rs = statement.executeQuery();
             while(rs.next()) {
-
+                String personId = rs.getString(1);
+                String descendant = rs.getString(2);
+                String firstName = rs.getString(3);
+                String lastName = rs.getString(4);
+                String gender = rs.getString(5);
+                String fatherId = rs.getString(6); //could be null
+                String motherId = rs.getString(7);
+                String spouseId = rs.getString(8);
+                Person person = new Person(personId,descendant,firstName,lastName,gender,fatherId,motherId,spouseId);
+                personList.add(person);
             }
+            Person[] personArray = personList.toArray(new Person[personList.size()]);
+            return personArray;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
-
-        return null;
     }
 
     public PersonDao(Connection connection) {

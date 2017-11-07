@@ -288,7 +288,7 @@ public class Facade {
      * @param authToken
      * @return allPersons
      */
-    public AllPersonsResponse findPersons(String authToken) {
+    public Person[] findPersons(String authToken) {
 
         Database db = new Database();
         Connection connection = null;
@@ -299,11 +299,10 @@ public class Facade {
         UserAuth ua = uaDao.getUserAuth(pseudoUa);
         if(ua == null)
             return null;
+        PersonDao pDao = new PersonDao(connection);
+        Person[] personArray = pDao.getAllPersons(ua.getUsername());
 
-
-
-
-        return null;
+        return personArray;
     }
 
     /** returns single Event object with the specified event ID
@@ -317,7 +316,7 @@ public class Facade {
      * @param authToken
      * @return allEvents
      */
-    public AllEventsResponse findEvents(String authToken) {return null;}
+    public Event[] findEvents(String authToken) {return null;}
 }
 
 
