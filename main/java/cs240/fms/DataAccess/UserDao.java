@@ -49,7 +49,7 @@ public class UserDao {
             statement.setString(2, password);
             rs = statement.executeQuery();
             while(rs.next()) {
-                personId = rs.getString(1);
+                personId = rs.getString(7);
                 break;
             }
             statement.close();
@@ -78,7 +78,7 @@ public class UserDao {
      * @param user
      * @throws Exception
      */
-    public void removeUser(User user) throws Exception {
+    public boolean removeUser(User user) throws Exception {
         PreparedStatement statement = null;
        try {
            //openConnection();
@@ -87,9 +87,10 @@ public class UserDao {
            statement.setString(1, user.getUsername());
            statement.executeUpdate();
            statement.close();
-           //closeConnection(true);
+           return true;
        } catch (SQLException e) {
            e.printStackTrace();
+           return false;
        }
     }
 
