@@ -116,8 +116,7 @@ public class Facade {
 
          //retrieve user (check if null)
         UserDao ud = new UserDao(connection);
-        User pseudoUser = new User(fillInfo.getUsername());
-        User existingUser = ud.getUser(pseudoUser);
+        User existingUser = ud.getUser(fillInfo.getUsername());
         if(existingUser == null) {
             return false;
         }
@@ -256,31 +255,28 @@ public class Facade {
     /** returns the single Person object with the specified ID
      *
      * @param authToken
-     * @param personID
+     * @param personId
      * @return person
      */
-    public PersonResponse findPerson(String authToken, String personID) {
+    public Person findPerson(String authToken, String personId) {
 
         Database db = new Database();
         Connection connection = null;
         connection = db.openConnection(connection);
         PersonDao pDao = new PersonDao(connection);
-        Person pseudoPerson = new Person(personID);
         //check personId
-        Person person = pDao.getPerson(pseudoPerson);
+        Person person = pDao.getPerson(personId);
         if(person == null)
             return null;
         //check authToken
         UserAuthDao uaDao = new UserAuthDao(connection);
-        UserAuth pseudoUa = new UserAuth(authToken);
-        UserAuth ua = uaDao.getUserAuth(pseudoUa);
+        UserAuth ua = uaDao.getUserAuth(authToken);
         if(ua == null)
             return null;
         //check if requested person belongs to user
         if(!(ua.getUsername().equals(person.getDescendant())))
             return null;
-        PersonResponse pr = new PersonResponse(person);
-        return pr;
+        return person;
     }
 
     /** returns all family members of the current user. The current user is determined from the provided auth token
@@ -295,8 +291,7 @@ public class Facade {
         connection = db.openConnection(connection);
         //check authToken
         UserAuthDao uaDao = new UserAuthDao(connection);
-        UserAuth pseudoUa = new UserAuth(authToken);
-        UserAuth ua = uaDao.getUserAuth(pseudoUa);
+        UserAuth ua = uaDao.getUserAuth(authToken);
         if(ua == null)
             return null;
         PersonDao pDao = new PersonDao(connection);
@@ -310,13 +305,33 @@ public class Facade {
      * @param authToken
      * @return event
      */
-    public EventResponse findEvent(String authToken, String eventId) {return null;}
+    public Event findEvent(String authToken, String eventId) {
+        Database db = new Database();
+        Connection connection = null;
+        connection = db.openConnection(connection);
+        EventDao eDao = new EventDao(connection);
+        //check authToken
+        UserAuthDao uaDao = new UserAuthDao(connection);
+        UserAuth ua = uaDao.getUserAuth(authToken);
+        if(ua == null)
+            return null;
+        //check eventId
+        Event event = eDao.getEvent(eventId);
+        //check if username belongs to event
+        if(!(ua.getUsername().equals(event.getUsername())))
+            return null;
+        return event;
+
+    }
 
     /** returns all events for all family members of the current user. Current user is determined by the provided auth token
      * @param authToken
      * @return allEvents
      */
-    public Event[] findEvents(String authToken) {return null;}
+    public Event[] findEvents(String authToken) {
+
+        return null;
+    }
 }
 
 

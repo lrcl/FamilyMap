@@ -90,21 +90,19 @@ public class EventDao {
 
     /**
      * Retrieves a row from Event table, throws exception if Event does not exist
-     * @param event
+     * @param queryEventId
      * @throws Exception
      * @return event
      *
      */
-    public Event getEvent(Event event) throws Exception {
+    public Event getEvent(String queryEventId) {
         PreparedStatement statement = null;
         ResultSet rs = null;
         Event queriedEvent = null;
         try {
-            String queryEventId = event.getEventID();
             statement = connection.prepareStatement("select * from Event where eventId = ?");
             statement.setString(1, queryEventId);
             rs = statement.executeQuery();
-
             while(rs.next()) {
                 String eventId = rs.getString(1);
                 String username = rs.getString(2);
@@ -123,9 +121,9 @@ public class EventDao {
             return queriedEvent;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            //if there was an error, I want it to do this:
-            statement.close();
-            rs.close();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

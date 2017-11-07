@@ -94,21 +94,18 @@ public class UserDao {
     }
 
     /** Retrieves a row from User table throws exception if user does not exist
-     * @param user
+     * @param queryUsername
      * @throws Exception
      * @return user
      */
-    public User getUser(User user) {
+    public User getUser(String queryUsername) {
         PreparedStatement statement = null;
         ResultSet rs = null;
         User queriedUser = null;
         try {
-            //openConnection();
-            String queryUsername = user.getUsername();
             statement = connection.prepareStatement("select * from User where username = ?");
             statement.setString(1, queryUsername);
             rs = statement.executeQuery();
-
             while (rs.next()) {
                 String username = rs.getString(1);
                 String password = rs.getString(2);

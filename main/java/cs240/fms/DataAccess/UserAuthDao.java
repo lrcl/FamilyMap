@@ -60,16 +60,15 @@ public class UserAuthDao {
     }
 
     /** Retrieves a row from UserAuth table throws exception if UserAuth does not exist
-     * @param userAuth
+     * @param queryAuthToken
      * @throws Exception
      * @return userAuth
      */
-    public UserAuth getUserAuth(UserAuth userAuth) {
+    public UserAuth getUserAuth(String queryAuthToken) {
         PreparedStatement statement = null;
         ResultSet rs = null;
         UserAuth queriedUserAuth = null;
         try {
-            String queryAuthToken = userAuth.getAuthToken();
             statement = connection.prepareStatement("select * from UserAuth where authToken = ?");
             statement.setString(1, queryAuthToken);
             rs = statement.executeQuery();

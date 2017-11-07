@@ -116,17 +116,15 @@ public class PersonDao {
         }
     }
     /** Retrieves a row from Person table by personId
-     * @param person
+     * @param queryPersonId
      * @throws Exception if person does not exist
      * @return person
      */
-    public Person getPerson(Person person) {
+    public Person getPerson(String queryPersonId) {
         PreparedStatement statement = null;
         ResultSet rs = null;
         Person queriedPerson = null;
         try {
-            //openConnection();
-            String queryPersonId = person.getPersonID();
             statement = connection.prepareStatement("select * from Person where personId = ?");
             statement.setString(1, queryPersonId);
             rs = statement.executeQuery();
