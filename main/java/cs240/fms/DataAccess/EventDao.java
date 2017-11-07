@@ -127,6 +127,39 @@ public class EventDao {
             return null;
         }
     }
+    public Event[] getAllEvents(String queryUsername) {
+        ArrayList<Event> eventList = new ArrayList<Event>();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = connection.prepareStatement("select * from Event where username = ?");
+            statement.setString(1, queryUsername);
+            rs = statement.executeQuery();
+            while(rs.next()) {
+                String eventId = rs.getString(1);
+                String username = rs.getString(2);
+                String personId = rs.getString(3);
+                Double latitude = rs.getDouble(4);
+                Double longitude = rs.getDouble(5);
+                String country = rs.getString(6);
+                String city = rs.getString(7);
+                String eventType = rs.getString(8);
+                int year = rs.getInt(9);
+                Event event = new Event(eventId, username, personId, latitude, longitude, country, city, eventType, year);
+                eventList.add(event);
+            }
+            Event[] eventArray = eventList.toArray(new Event[eventList.size()]);
+            statement.close();
+            rs.close();
+            return eventArray;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 
     public EventDao(Connection connection) {
 

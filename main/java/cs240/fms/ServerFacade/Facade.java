@@ -317,6 +317,8 @@ public class Facade {
             return null;
         //check eventId
         Event event = eDao.getEvent(eventId);
+        if(event == null)
+            return null;
         //check if username belongs to event
         if(!(ua.getUsername().equals(event.getUsername())))
             return null;
@@ -329,8 +331,18 @@ public class Facade {
      * @return allEvents
      */
     public Event[] findEvents(String authToken) {
+        Database db = new Database();
+        Connection connection = null;
+        connection = db.openConnection(connection);
+        EventDao eDao = new EventDao(connection);
+        //check authToken
+        UserAuthDao uaDao = new UserAuthDao(connection);
+        UserAuth ua = uaDao.getUserAuth(authToken);
+        if(ua == null)
+            return null;
+        Event[] events = eDao.getAllEvents(ua.getUsername());
 
-        return null;
+        return events;
     }
 }
 
