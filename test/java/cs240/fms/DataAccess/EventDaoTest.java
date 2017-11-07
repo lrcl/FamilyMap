@@ -88,7 +88,7 @@ public class EventDaoTest {
         eventDao.removeAllEvents("username1");
         eventDao.removeAllEvents("username2");
         Event[] events = eventDao.getAllEvents("username2");
-        System.out.println(events.length);
+        assertSame(0,events.length);
     }
 
 }

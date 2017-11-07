@@ -20,7 +20,6 @@ public class PersonDao {
         //should I check if this person already is in database?
         PreparedStatement statement = null;
         try {
-            //openConnection();
             String insert = "insert into Person values (?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(insert);
             statement.setString(1, person.getPersonID());
@@ -56,7 +55,7 @@ public class PersonDao {
         return allAdded;
     }
     //updates existing person in database
-    public void updateMotherId(String motherId, Person person) {
+    public boolean updateMotherId(String motherId, Person person) {
         PreparedStatement statement = null;
         try {
             String update = "update Person set motherId = ? where personId = ?";
@@ -65,29 +64,33 @@ public class PersonDao {
             statement.setString(2, person.getPersonID());
             statement.executeUpdate();
             statement.close();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
     //updates existing person in database
-    public void updateFatherId(String fatherId, Person person) {
+    public boolean updateFatherId(String fatherId, Person person) {
         PreparedStatement statement = null;
         try{
-            String update = "update Person set father Id = ? where personId = ?";
+            String update = "update Person set fatherId = ? where personId = ?";
             statement = connection.prepareStatement(update);
             statement.setString(1, fatherId);
             statement.setString(2, person.getPersonID());
             statement.executeUpdate();
             statement.close();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return true;
         }
     }
     /** Removes a Person from row in Person table, throws exception if Person does not exist
      * @param person
      * @throws Exception
      */
-    public void removePerson(Person person) {
+    public boolean removePerson(Person person) {
         PreparedStatement statement = null;
         try {
             String delete = "delete from Person where personId = ?";
@@ -95,15 +98,17 @@ public class PersonDao {
             statement.setString(1, person.getPersonID());
             statement.executeUpdate();
             statement.close();
-            //closeConnection(true);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         } catch (Exception ex) {
             ex.printStackTrace();
+            return false;
         }
     }
     //removes all Persons from database that are associated with the given username
-    public void removeAllPersons(String username) {
+    public boolean removeAllPersons(String username) {
         PreparedStatement statement = null;
         try{
             String delete = "delete from Person where descendant = ?";
@@ -111,8 +116,10 @@ public class PersonDao {
             statement.setString(1, username);
             statement.executeUpdate();
             statement.close();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
     /** Retrieves a row from Person table by personId
