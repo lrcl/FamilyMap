@@ -1,6 +1,7 @@
 package cs240.fms.DataAccess;
 
 
+import java.security.spec.ECField;
 import java.sql.Connection;
 import java.sql.*;
 
@@ -39,6 +40,31 @@ public class Database {
         }
     }
     //create tables
+    public boolean createTables(Connection connection) {
+        PreparedStatement statement = null;
+        String createUser = "create table if not exists User (\n"
+                + "username text not null primary key, \n"
+                + "password text not null, \n"
+                + "email text not null, \n"
+                + "firstName text not null, \n"
+                + "lastName text not null, \n"
+                + "gender text not null, \n"
+                + "personId text not null foreign key\n"
+                + ");";
+       // String createPerson = "create table if not exists Person"
+        try {
+            statement = connection.prepareStatement(createUser);
+            statement.executeUpdate();
+            statement.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     //drop all tables --can I reuse the statement to do multiple sql statements?
     public void dropAllTables(Connection connection) {
         PreparedStatement statement = null;
