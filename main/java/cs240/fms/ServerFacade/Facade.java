@@ -1,18 +1,7 @@
 package cs240.fms.ServerFacade;
 
 
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.AbstractQueue;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -36,23 +25,21 @@ public class Facade {
      */
     public RegisterResponse register(RegisterRequest registerInfo) {
 
-        // TO DO: check to see if username is taken and if all info is present and correct ***************************
-
         User user = new User(registerInfo.getUsername(), registerInfo.getPassword(),registerInfo.getEmail(),registerInfo.getFirstName(),registerInfo.getLastName(),registerInfo.getGender(),"");
         Database database =  new Database();
         Connection connection = null;
         connection = database.openConnection(connection);
         UserDao userDao = new UserDao(connection);
+        if(userDao.getUser(user.getUsername()) != null)
+            //username is taken
+            return null;
+        //create personId
+        Generator g = new Generator();
+        user.setPersonId(g.createId());
         boolean added = userDao.addUser(user);
         if(!added) {
             return null;
         }
-        /*//create person for this user and add to database
-        Generator g = new Generator();
-        Person p = g.createPersonFromUser(user);
-        PersonDao pd = new PersonDao(connection);
-        pd.addPerson(p);
-*/
         FillRequest fillInfo = new FillRequest(user.getUsername(), 4);
         //user is generation #0 and can be married or single
         fill(fillInfo);
@@ -68,8 +55,6 @@ public class Facade {
      */
     public RegisterResponse login(LoginRequest loginInfo) {
 
-        //TO DO: check to see if the user is registered****************************
-
         //generate authToken
         String longAuthToken = UUID.randomUUID().toString();
         String authToken = longAuthToken.substring(0,7);
@@ -78,13 +63,17 @@ public class Facade {
         Database db = new Database();
         Connection connection = null;
         connection = db.openConnection(connection);
+        //check if user is registered
+        UserDao userDao = new UserDao(connection);
+        if(userDao.getUser(loginInfo.getUsername()) == null)
+            //user is non-existent
+            return null;
         UserAuthDao uad = new UserAuthDao(connection);
         boolean added = uad.addUserAuth(userAuth);
         if (!added) {
             return null;
         }
         //query for personId
-        UserDao userDao = new UserDao(connection);
         String personId = userDao.getPersonIdByLogin(loginInfo.getUsername(), loginInfo.getPassword());
         RegisterResponse rr = new RegisterResponse(authToken, loginInfo.getUsername(), personId);
         return rr;

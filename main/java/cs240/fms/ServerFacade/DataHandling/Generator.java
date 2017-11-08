@@ -3,13 +3,17 @@ package cs240.fms.ServerFacade.DataHandling;
 
 import cs240.fms.Models.*;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
+import cs240.fms.ServerFacade.DataHandling.*;
 
 public class Generator {
     protected FemaleName femaleNames;
@@ -17,20 +21,40 @@ public class Generator {
     protected Location locations;
     protected LastName lastNames;
 
-    public void loadData() {
+    public boolean loadData() {
+        final String JsonPath1 = "/home/grant/AndroidStudioProjects/FMS/app/libs/json/fnames.json";
+        final String JsonPath2 = "/home/grant/AndroidStudioProjects/FMS/app/libs/json/mnames.json";
+        final String JsonPath3 = "/home/grant/AndroidStudioProjects/FMS/app/libs/json/locations.json";
+        final String JsonPath4 = "/home/grant/AndroidStudioProjects/FMS/app/libs/json/snames.json";
+        try{
+            JsonReader jsonReader1 = new JsonReader(new FileReader(JsonPath1));
+            JsonReader jsonReader2 = new JsonReader(new FileReader(JsonPath2));
+            JsonReader jsonReader3 = new JsonReader(new FileReader(JsonPath3));
+            JsonReader jsonReader4 = new JsonReader(new FileReader(JsonPath4));
 
-       Gson gson = new Gson();
-       gson.fromJson("fnames.json",FemaleName.class);
-       Gson gson2 = new Gson();
-       gson2.fromJson("mnames.json", MaleName.class);
-       Gson gson3 = new Gson();
-       gson3.fromJson("locations.json", Location.class);
-       Gson gson4 = new Gson();
-       gson4.fromJson("snames.json", LastName.class);
+            Gson gson = new Gson();
+            femaleNames = gson.fromJson(jsonReader1,FemaleName.class);
+            Gson gson2 = new Gson();
+            maleNames = gson2.fromJson(jsonReader2, MaleName.class);
+            Gson gson3 = new Gson();
+            locations = gson3.fromJson(jsonReader3, Location.class);
+            Gson gson4 = new Gson();
+            lastNames = gson4.fromJson(jsonReader4, LastName.class);
+            if(gson == null)
+                return false;
+            return true;
+        }
+        catch (IllegalStateException e) {
+            e.printStackTrace();
+            return false;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
     public Person createPersonFromUser(User user){
         Person p = new Person();
-        p.setPersonID(createId());
+        p.setPersonID(user.getPersonId());
         p.setDescendant(user.getUsername());
         p.setFirstName(user.getFirstName());
         p.setLastName(user.getLastName());
@@ -39,6 +63,7 @@ public class Generator {
         return p;
     }
     public Person createPersonFromFile(String username, String gender) {
+        loadData();
         Person p = new Person();
         Random r = new Random();
 
@@ -46,6 +71,7 @@ public class Generator {
         if(gender.equals("f")) {
             int index = r.nextInt(femaleNames.data.length-1);
             p.setFirstName(femaleNames.data[index]);
+            //System.out.println(femaleNames.data[index]);
         }
         else {
             r = new Random();
@@ -72,18 +98,19 @@ public class Generator {
         return Id;
     }
     public Event createBirth(int gen, String username, String personId) {
+        loadData();
         //birth year
         Random r = new Random();
-        int offset = r.nextInt(6);
+        int offset = r.nextInt(5);
         int year = 1990 - (gen*20) + offset;
 
-        //location
+       //location
         r = new Random();
         int index = r.nextInt(locations.data.length-1);
-        String country = getCountry(locations.data[index]);
-        String city = getCity(locations.data[index]);
-        Double lat = getLat(locations.data[index]);
-        Double longit = getLong(locations.data[index]);
+        String country = locations.data[index].get("country").toString();
+        String city = locations.data[index].get("city").toString();
+        Double lat = Double.parseDouble(locations.data[index].get("latitude").toString());
+        Double longit = Double.parseDouble(locations.data[index].get("longitude").toString());
 
         //type
         String type = "birth";
@@ -93,19 +120,31 @@ public class Generator {
         Event birth = new Event(eventId,username,personId,lat,longit,country,city,type,year);
         return birth;
     }
-    public Event createMarriage(int gen, String username, String personId) {
-        //year
+    public Double generateLocationInfo() {
+        //location
+        loadData();
         Random r = new Random();
-        int offset = r.nextInt(6);
+        int index = r.nextInt(locations.data.length-1);
+        String country = locations.data[index].get("country").toString();
+        String city = locations.data[index].get("city").toString();
+        Double lat = Double.parseDouble(locations.data[index].get("latitude").toString());
+        Double longit = Double.parseDouble(locations.data[index].get("longitude").toString());
+        return longit;
+    }
+    public Event createMarriage(int gen, String username, String personId) {
+        loadData();
+       //year
+        Random r = new Random();
+        int offset = r.nextInt(5);
         int year = 2010 - (gen * 20) + offset;
 
         //location
         r = new Random();
         int index = r.nextInt(locations.data.length-1);
-        String country = getCountry(locations.data[index]);
-        String city = getCity(locations.data[index]);
-        Double lat = getLat(locations.data[index]);
-        Double longit = getLong(locations.data[index]);
+        String country = locations.data[index].get("country").toString();
+        String city = locations.data[index].get("city").toString();
+        Double lat = Double.parseDouble(locations.data[index].get("latitude").toString());
+        Double longit = Double.parseDouble(locations.data[index].get("longitude").toString());
 
         //type
         String type = "marriage";
@@ -116,18 +155,19 @@ public class Generator {
         return marriage;
     }
     public Event createDeathDate(int gen, String username, String personId) {
+        loadData();
         //year
         Random r = new Random();
-        int offset = r.nextInt(6);
+        int offset = r.nextInt(5);
         int year = 2030 - (gen * 20) + offset;
 
         //location
         r = new Random();
         int index = r.nextInt(locations.data.length-1);
-        String country = getCountry(locations.data[index]);
-        String city = getCity(locations.data[index]);
-        Double lat = getLat(locations.data[index]);
-        Double longit = getLong(locations.data[index]);
+        String country = locations.data[index].get("country").toString();
+        String city = locations.data[index].get("city").toString();
+        Double lat = Double.parseDouble(locations.data[index].get("latitude").toString());
+        Double longit = Double.parseDouble(locations.data[index].get("longitude").toString());
 
         //type
         String type = "death";
@@ -139,7 +179,7 @@ public class Generator {
     }
     public String getCountry(String jsonStr) {
         try {
-            JSONObject json = new JSONObject(jsonStr);
+            JSONObject json = new JSONObject(jsonStr.trim());
             String country = json.getString("country");
             return country;
         } catch (JSONException je) {
@@ -149,7 +189,7 @@ public class Generator {
     }
     public String getCity(String jsonStr) {
         try{
-            JSONObject json = new JSONObject(jsonStr);
+            JSONObject json = new JSONObject(jsonStr.trim());
             String city = json.getString("city");
             return city;
         } catch (JSONException je) {
@@ -159,7 +199,7 @@ public class Generator {
     }
     public Double getLat(String js) {
         try{
-            JSONObject json = new JSONObject(js);
+            JSONObject json = new JSONObject(js.trim());
             Double lat = json.getDouble("latitude");
             return lat;
         } catch(JSONException je) {
@@ -169,7 +209,7 @@ public class Generator {
     }
     public Double getLong(String js) {
         try{
-            JSONObject json = new JSONObject(js);
+            JSONObject json = new JSONObject(js.trim());
             Double longit = json.getDouble("longitude");
             return longit;
         } catch (JSONException je) {
