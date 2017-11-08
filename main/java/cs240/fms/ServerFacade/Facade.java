@@ -40,6 +40,7 @@ public class Facade {
         if(!added) {
             return null;
         }
+        //how do I get the # of generations from the user's request?
         FillRequest fillInfo = new FillRequest(user.getUsername(), 4);
         //user is generation #0 and can be married or single
         fill(fillInfo);
@@ -87,6 +88,7 @@ public class Facade {
         Connection connection = null;
         connection = db.openConnection(connection);
         db.dropAllTables(connection);
+        db.createTables(connection);
     }
 
     /** Popluates the database with generated information for the given, existing username
@@ -118,7 +120,6 @@ public class Facade {
 
         //generate p1 and p1's events
         Generator g = new Generator();
-        g.loadData();
         Person p1 = g.createPersonFromUser(existingUser);
         Event p1Birth = g.createBirth(0, username, p1.getPersonID());
         Event p1Marriage = g.createMarriage(0, username, p1.getPersonID());
@@ -131,7 +132,7 @@ public class Facade {
         }
         //using a queue, create and match each generation of people with events
         int sum = peopleSum(fillInfo.getGenerations());
-        if(matchPeopleWithEvents(g, pd, ed, username, p1, sum))
+        if(!matchPeopleWithEvents(g, pd, ed, username, p1, sum))
             return false;
 
         return true;
@@ -162,6 +163,7 @@ public class Facade {
                 //mother and father have same marriage event
                 Event marriage = g.createMarriage(gen, username, mother.getPersonID());
                 Event marriage2 = new Event(marriage);
+                marriage2.setEventId(g.createId());
                 marriage2.setPersonID(father.getPersonID());
                 ed.addEvent(marriage);
                 ed.addEvent(marriage2);
@@ -175,8 +177,8 @@ public class Facade {
                 pd.updateMotherId(mother.getPersonID(), child);
                 pd.updateFatherId(father.getPersonID(), child);
                 //add to database
-                pd.addPerson(mother);
-                pd.addPerson(father);
+               //pd.addPerson(mother);
+                //pd.addPerson(father);
                 //put on queue
                 personQueue.add(mother);
                 personQueue.add(father);
@@ -221,7 +223,6 @@ public class Facade {
         boolean allAdded = true;
         //clear all data from database
         clear();
-       //open connection
         Database db = new Database();
         Connection connection = null;
         connection = db.openConnection(connection);

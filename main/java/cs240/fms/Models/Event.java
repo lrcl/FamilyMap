@@ -157,4 +157,7 @@ public class Event {
         this.year = event.year;
     }
 
+    public void setEventId(String eventID) {
+        this.eventID = eventID;
+    }
 }
