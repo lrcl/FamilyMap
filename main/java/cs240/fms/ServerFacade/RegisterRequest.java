@@ -5,7 +5,7 @@ public class RegisterRequest {
 
       /** username */
 
-   private String username; //should be camelcase? userName
+   private String userName; //should be camelcase
    /** password */
    private String password;
    /** User's email address */
@@ -18,7 +18,7 @@ public class RegisterRequest {
    private String gender;
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     public String getPassword() {
@@ -51,7 +51,7 @@ public class RegisterRequest {
     * @param gender
     */
    public RegisterRequest(String username, String password, String email, String firstName, String lastName, String gender) {
-       this.username = username;
+       this.userName = username;
        this.password = password;
        this.email = email;
        this.firstName = firstName;

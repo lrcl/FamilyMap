@@ -30,7 +30,7 @@ public class Facade {
         Connection connection = null;
         connection = database.openConnection(connection);
         UserDao userDao = new UserDao(connection);
-        if(userDao.getUser(user.getUsername()) != null)
+        if(!userDao.getUser(user.getUsername()).equals(null))
             //username is taken
             return null;
         //create personId
