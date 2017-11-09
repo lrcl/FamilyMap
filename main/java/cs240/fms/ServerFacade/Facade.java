@@ -86,12 +86,19 @@ public class Facade {
     /** Clears all information from database
      *
      */
-    public void clear() {
+    public boolean clear() {
         Database db = new Database();
         Connection connection = null;
         connection = db.openConnection(connection);
-        db.dropAllTables(connection);
-        db.createTables(connection);
+        boolean dropped = db.dropAllTables(connection);
+        if(!dropped) {
+            return false;
+        }
+        boolean created = db.createTables(connection);
+        if(!created) {
+            return false;
+        }
+        return true;
     }
 
     /** Popluates the database with generated information for the given, existing username
