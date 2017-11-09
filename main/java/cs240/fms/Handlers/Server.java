@@ -2,7 +2,11 @@ package cs240.fms.Handlers;
 
 import java.io.*;
 import java.net.*;
+import java.sql.Connection;
+
 import com.sun.net.httpserver.*;
+
+import cs240.fms.DataAccess.Database;
 
 public class Server {
     private static final int MAX_WAITING_CONNECTIONS = 12;
@@ -37,6 +41,10 @@ public class Server {
     public static void main(String[] args) {
         try{
             String portNumber = args[0];
+            Database db = new Database();
+            Connection connection = null;
+            connection = db.openConnection(connection);
+            db.createTables(connection);
             new Server().run(portNumber);
         } catch (Exception e){
             e.printStackTrace();

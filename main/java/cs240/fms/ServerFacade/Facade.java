@@ -30,9 +30,12 @@ public class Facade {
         Connection connection = null;
         connection = database.openConnection(connection);
         UserDao userDao = new UserDao(connection);
-        if(!userDao.getUser(user.getUsername()).equals(null))
+        String userName = registerInfo.getUsername();
+        User checkUser = userDao.getUser(userName);
+        if(checkUser != null) {
             //username is taken
             return null;
+        }
         //create personId
         Generator g = new Generator();
         user.setPersonId(g.createId());
@@ -141,7 +144,7 @@ public class Facade {
 
         BlockingQueue<Person> personQueue = new LinkedBlockingQueue<Person>();
         personQueue.add(p1);
-        int i = 1;
+        int i = 0;
         int gen = 1;
         while(i < sum) {
             try {
@@ -201,8 +204,9 @@ public class Facade {
     private int peopleSum (int generations) {
         double total = 0;
         double gen = (double)generations;
-        for(int i = 0; i < gen+1; i++) {
+        for(int i = generations; i > -1; i--) {
             total += Math.pow(2,gen);
+            gen--;
         }
         int sum = (int)total;
         return sum;

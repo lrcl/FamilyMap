@@ -4,14 +4,11 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.URI;
+
 
 import cs240.fms.ServerFacade.Facade;
 import cs240.fms.ServerFacade.RegisterRequest;
@@ -40,7 +37,7 @@ class RegisterHandler implements HttpHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            response = "{ message: unable to register user }";
+            response = "{" + "\"message\": " +  "\"unable to register user\"" + "}";
 
         }
         else {
@@ -49,21 +46,19 @@ class RegisterHandler implements HttpHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            response = "{ authToken:" + registerResponse.getAuthToken() + ","
-                    + "userName:" + registerResponse.getUsername() + ","
-                    + "personID:" + registerResponse.getPersonId() + "}";
+            response = "{ \"authToken\":" + "\"" + registerResponse.getAuthToken() + "\"" + ","
+                    + "\"userName\":" + "\"" + registerResponse.getUsername() + "\"" + ","
+                    + "\"personID\":" + "\"" + registerResponse.getPersonId() + "\"" + "}";
 
         }
-            PrintWriter out = new PrintWriter(exchange.getResponseBody());
-            out.print(response);
-            out.close();
-     /*   OutputStream os = exchange.getResponseBody();
+    
+        OutputStream os = exchange.getResponseBody();
         try {
             os.write(response.getBytes());
             os.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } */
+        }
 
     }
 }
