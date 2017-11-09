@@ -24,7 +24,7 @@ public class Facade {
      * @return response
      */
     public RegisterResponse register(RegisterRequest registerInfo) {
-
+        System.out.println("registering user");
         User user = new User(registerInfo.getUsername(), registerInfo.getPassword(),registerInfo.getEmail(),registerInfo.getFirstName(),registerInfo.getLastName(),registerInfo.getGender(),"");
         Database database =  new Database();
         Connection connection = null;

@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
 
@@ -26,7 +28,7 @@ class RegisterHandler implements HttpHandler {
     }
     public void getRequestBody(HttpExchange exchange) {
         InputStream stream = exchange.getRequestBody();
-        String registerInfo = stream.toString();
+        InputStreamReader registerInfo = new InputStreamReader(stream);
         Gson g = new Gson();
         RegisterRequest rr = g.fromJson(registerInfo, RegisterRequest.class);
         Facade facade = new Facade();
@@ -54,9 +56,14 @@ class RegisterHandler implements HttpHandler {
         }
             PrintWriter out = new PrintWriter(exchange.getResponseBody());
             out.print(response);
-            out.flush();
             out.close();
-
+     /*   OutputStream os = exchange.getResponseBody();
+        try {
+            os.write(response.getBytes());
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */
 
     }
 }
