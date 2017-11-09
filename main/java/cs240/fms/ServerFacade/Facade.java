@@ -185,7 +185,7 @@ public class Facade {
                 //put on queue
                 personQueue.add(mother);
                 personQueue.add(father);
-                i += 2;
+                i ++; //make sure this works
                 if((double)i > Math.pow(2,(double)gen)){
                     gen++;
                 }

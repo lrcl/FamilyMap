@@ -51,7 +51,7 @@ class RegisterHandler implements HttpHandler {
                     + "\"personID\":" + "\"" + registerResponse.getPersonId() + "\"" + "}";
 
         }
-    
+
         OutputStream os = exchange.getResponseBody();
         try {
             os.write(response.getBytes());

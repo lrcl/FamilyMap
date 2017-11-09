@@ -4,24 +4,22 @@ import cs240.fms.Models.Person;
 import java.util.ArrayList;
 
 public class AllPersonsResponse {
-    /*
-    /** contains an array list of Persons */
-    }
-    //private ArrayList<Person> allPersons;
 
-    /** return the array list of Persons
-     *
+    /** contains an array  of Persons */
+    private Person[] data;
 
-   public Person[] getAllPersons() {
+    /** return the array  of Persons */
 
+   public Person[] getData() {
+        return data;
     }
     /** constructor
-     * @param allPersons
+     * @param data */
 
-   // public AllPersonsResponse(ArrayList<Person> allPersons) {
-        this.allPersons = allPersons;
+   public AllPersonsResponse(Person[] data) {
+        this.data = data;
     }
 
 }
-*/
+
 

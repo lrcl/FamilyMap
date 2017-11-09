@@ -7,21 +7,21 @@ public class AllEventsResponse {
     /**
      * an array list of Event objects
      */
-    private ArrayList<Event> allEvents;
+    private Event[] data;
 
     /**
      * get allEvents
      *@return allEvents array list
      */
-    public ArrayList<Event> getAllEvents() {
-        return this.allEvents;
+    public Event[] getData() {
+        return this.data;
     }
     /**
      * constructor
-     * @param allEvents
+     * @param data
      */
-    public AllEventsResponse(ArrayList<Event> allEvents) {
-        this.allEvents = allEvents;
+    public AllEventsResponse(Event[] data) {
+        this.data = data;
 
     }
 
