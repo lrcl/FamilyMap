@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.URI;
 
 import cs240.fms.Models.Person;
+import cs240.fms.ServerFacade.AllPersonsResponse;
 import cs240.fms.ServerFacade.Facade;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
@@ -26,23 +27,48 @@ class PersonHandler implements HttpHandler {
         StringBuilder sb = new StringBuilder(ur);
         String personId = sb.substring(8);
         Facade facade = new Facade();
-        Person person = facade.findPerson(authToken, personId);
-        String jsonStr = new Gson().toJson(person);
-        if(person ==  null) {
-            try {
-                exchange.sendResponseHeaders(HTTP_BAD_REQUEST,0);
-                jsonStr = "{" + "\"message\":" + "\"could not retrieve persons\"" + "}";
-            } catch (IOException e) {
-                e.printStackTrace();
+        String jsonStr = "";
+        if(personId.length() == 0) {
+            Person[] data =  facade.findPersons(authToken);
+            AllPersonsResponse apr = new AllPersonsResponse(data);
+            jsonStr = new Gson().toJson(apr);
+            if(data == null){
+                try {
+                    exchange.sendResponseHeaders(HTTP_BAD_REQUEST,0);
+                    jsonStr = "{" + "\"message\":" + "\"could not retrieve persons\"" + "}";
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else {
+                try {
+                    exchange.sendResponseHeaders(HTTP_OK, 0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         else {
-            try {
-                exchange.sendResponseHeaders(HTTP_OK, 0);
-            } catch (IOException e) {
-                e.printStackTrace();
+            Person person = facade.findPerson(authToken, personId);
+            jsonStr = new Gson().toJson(person);
+            if(person ==  null) {
+                try {
+                    exchange.sendResponseHeaders(HTTP_BAD_REQUEST,0);
+                    jsonStr = "{" + "\"message\":" + "\"could not retrieve persons\"" + "}";
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                try {
+                    exchange.sendResponseHeaders(HTTP_OK, 0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
         OutputStream os = exchange.getResponseBody();
         try {
             os.write(jsonStr.getBytes());
