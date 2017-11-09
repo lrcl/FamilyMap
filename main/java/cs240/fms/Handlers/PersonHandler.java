@@ -28,6 +28,7 @@ class PersonHandler implements HttpHandler {
         String personId = sb.substring(8);
         Facade facade = new Facade();
         String jsonStr = "";
+        //GET ALL PERSONS
         if(personId.length() == 0) {
             Person[] data =  facade.findPersons(authToken);
             AllPersonsResponse apr = new AllPersonsResponse(data);
@@ -49,6 +50,7 @@ class PersonHandler implements HttpHandler {
                 }
             }
         }
+        //GET JUST ONE PERSON BASED ON GIVEN ID
         else {
             Person person = facade.findPerson(authToken, personId);
             jsonStr = new Gson().toJson(person);
@@ -68,7 +70,7 @@ class PersonHandler implements HttpHandler {
                 }
             }
         }
-
+        //send json back to user
         OutputStream os = exchange.getResponseBody();
         try {
             os.write(jsonStr.getBytes());
