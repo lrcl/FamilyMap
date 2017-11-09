@@ -54,6 +54,7 @@ class RegisterHandler implements HttpHandler {
         }
             PrintWriter out = new PrintWriter(exchange.getResponseBody());
             out.print(response);
+            out.flush();
             out.close();
 
 

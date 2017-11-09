@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.sql.Connection;
 
 import cs240.fms.Models.Event;
-import cs240.fms.ServerFacade.DataHandling.Generator;
+import cs240.fms.DataHandling.Generator;
 
 import static org.junit.Assert.*;
 

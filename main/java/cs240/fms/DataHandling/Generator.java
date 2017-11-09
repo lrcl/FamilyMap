@@ -1,4 +1,4 @@
-package cs240.fms.ServerFacade.DataHandling;
+package cs240.fms.DataHandling;
 
 
 import cs240.fms.Models.*;
@@ -10,10 +10,8 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
-import cs240.fms.ServerFacade.DataHandling.*;
 
 public class Generator {
     protected FemaleName femaleNames;

@@ -1,4 +1,4 @@
-package cs240.fms.ServerFacade.DataHandling;
+package cs240.fms.DataHandling;
 
 class LastName {
     protected String[] data;

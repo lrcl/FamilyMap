@@ -15,7 +15,7 @@ import cs240.fms.Models.Event;
 import cs240.fms.Models.Person;
 import cs240.fms.Models.User;
 import cs240.fms.Models.UserAuth;
-import cs240.fms.ServerFacade.DataHandling.Generator;
+import cs240.fms.DataHandling.Generator;
 
 public class Facade {
 

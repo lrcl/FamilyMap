@@ -1,10 +1,7 @@
-package cs240.fms.ServerFacade.DataHandling;
+package cs240.fms.DataHandling;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Random;
 
 import cs240.fms.Models.Event;
 import cs240.fms.Models.Person;
