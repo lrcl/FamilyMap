@@ -9,7 +9,19 @@ public class RegisterResponse {
    /** newly assigned personID */
    private String personId;
 
-   /** Constructor
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPersonId() {
+        return personId;
+    }
+
+    /** Constructor
     *
     * @param authToken
     * @param username

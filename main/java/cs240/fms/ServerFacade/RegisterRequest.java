@@ -4,7 +4,8 @@ package cs240.fms.ServerFacade;
 public class RegisterRequest {
 
       /** username */
-   private String username;
+
+   private String username; //should be camelcase? userName
    /** password */
    private String password;
    /** User's email address */

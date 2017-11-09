@@ -19,6 +19,7 @@ public class LoginHandler implements HttpHandler{
 
         if(exchange.getRequestMethod().toLowerCase().equals("post")) {
             getRequestBody(exchange);
+
             exchange.sendResponseHeaders(HTTP_OK,0);
             sendResponseBody(exchange);
         }

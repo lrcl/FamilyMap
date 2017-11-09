@@ -18,7 +18,7 @@ public class Server {
             return;
         }
         server.setExecutor(null);
-        server.createContext("/", new RootHandler());
+        server.createContext("/", new FileHandler());
         server.createContext("/user/register", new RegisterHandler());
         server.createContext("/user/login", new LoginHandler());
         server.createContext("/clear", new ClearHandler());
