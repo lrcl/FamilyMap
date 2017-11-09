@@ -44,7 +44,7 @@ public class UserTest {
 
     @Test
     public void getPersonID() throws Exception {
-        assertEquals("123456", user.getPersonId());
+        assertEquals("123456", user.getPersonID());
     }
 
 }
