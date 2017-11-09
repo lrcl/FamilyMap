@@ -3,12 +3,12 @@ package cs240.fms.ServerFacade;
 
 public class LoginRequest {
    /** username of existing user */
-   private String username;
+   private String userName;
    /** password previously created */
    private String password;
 
    public String getUsername() {
-       return username;
+       return userName;
    }
    public String getPassword() {
        return password;
@@ -19,7 +19,7 @@ public class LoginRequest {
     * @param password
     */
    public LoginRequest(String username, String password) {
-       this.username = username;
+       this.userName = username;
        this.password = password;
    }
 }

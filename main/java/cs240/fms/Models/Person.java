@@ -26,15 +26,15 @@ public class Person {
     /**
      * ID of person's father, could be null
      */
-    private String fatherID;
+    private String father;
     /**
      * ID of person's mother, could be null
      */
-    private String motherID;
+    private String mother;
     /**
      * ID of person's spouse, could be null
      */
-    private String spouseID;
+    private String spouse;
 
     /**
      * get personID
@@ -81,7 +81,7 @@ public class Person {
      * @return fatherID
      */
     public String getFatherID() {
-        return fatherID;
+        return father;
     }
 
     /**
@@ -89,7 +89,7 @@ public class Person {
      * @return motherID
      */
     public String getMotherID() {
-        return motherID;
+        return mother;
     }
 
     /**
@@ -97,7 +97,7 @@ public class Person {
      * @return spouseID
      */
     public String getSpouseID() {
-        return spouseID;
+        return spouse;
     }
 
     public void setPersonID(String personID) {
@@ -121,15 +121,15 @@ public class Person {
     }
 
     public void setFatherID(String fatherID) {
-        this.fatherID = fatherID;
+        this.father = fatherID;
     }
 
     public void setMotherID(String motherID) {
-        this.motherID = motherID;
+        this.mother = motherID;
     }
 
     public void setSpouseID(String spouseID) {
-        this.spouseID = spouseID;
+        this.spouse = spouseID;
     }
 
     /**
@@ -149,9 +149,9 @@ public class Person {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.fatherID = fatherID;
-        this.motherID = motherID;
-        this.spouseID = spouseID;
+        this.father = fatherID;
+        this.mother = motherID;
+        this.spouse = spouseID;
     }
     public Person(String personID){
         this.personID = personID;

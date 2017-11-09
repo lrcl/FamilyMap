@@ -52,7 +52,7 @@ public class Generator {
     }
     public Person createPersonFromUser(User user){
         Person p = new Person();
-        p.setPersonID(user.getPersonId());
+        p.setPersonID(user.getPersonID());
         p.setDescendant(user.getUsername());
         p.setFirstName(user.getFirstName());
         p.setLastName(user.getLastName());

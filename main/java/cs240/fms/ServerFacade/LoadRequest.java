@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 
 public class LoadRequest {
-   /** Array list of User objects to be loaded into database */
+   /** Array of User objects to be loaded into database */
    private User[] users;
-   /** Array list of Person objects to be loaded into database */
+   /** Array of Person objects to be loaded into database */
    private Person[] persons;
-   /** Array list of Event objects to be loaded into database */
+   /** Array of Event objects to be loaded into database */
    private Event[] events;
 
     public User[] getUsers() {

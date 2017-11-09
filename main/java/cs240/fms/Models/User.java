@@ -3,7 +3,7 @@ package cs240.fms.Models;
 
 public class User {
     /** The unique username */
-    private String username;
+    private String userName;
     /**User's password*/
     private String password;
     /** User's email address*/
@@ -15,14 +15,14 @@ public class User {
     /** User's gender*/
     private String gender;
     /** Unique Person ID assigned by Person object */
-    private String personId;
+    private String personID;
 
     /**
      * Return the username
      * @return username
      */
     public String getUsername() {
-        return username;
+        return userName;
     }
     /**
      * Return the password
@@ -62,12 +62,12 @@ public class User {
     /** Return the personID of the user
      * @return personID
      */
-    public String getPersonId() {
-        return personId;
+    public String getPersonID() {
+        return personID;
     }
 
     public void setPersonId(String newPersonId) {
-        this.personId = newPersonId;
+        this.personID = newPersonId;
     }
     /** Constructor
      * @param username
@@ -79,17 +79,17 @@ public class User {
      * @param personID
      */
     public User(String username, String password, String email, String firstName, String lastName, String gender, String personID) {
-        this.username = username;
+        this.userName = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.personId = personID;
+        this.personID = personID;
 
     }
     public User(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
 }

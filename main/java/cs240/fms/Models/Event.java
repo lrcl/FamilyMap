@@ -9,7 +9,7 @@ public class Event {
     /**
      * username to which this event belongs
      */
-    private String username;
+    private String descendant;
     /**
      * personID to which this event belongs
      */
@@ -58,7 +58,7 @@ public class Event {
      * @return username;
      */
     public String getUsername() {
-        return username;
+        return descendant;
     }
 
     /**
@@ -136,7 +136,7 @@ public class Event {
      */
     public Event(String eventID, String username, String personID, Double latitude, Double longitude, String country, String city, String eventType, int year) {
         this.eventID = eventID;
-        this.username = username;
+        this.descendant = username;
         this.personID = personID;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -147,7 +147,7 @@ public class Event {
     }
     public Event(Event event){
         this.eventID = event.eventID;
-        this.username = event.username;
+        this.descendant = event.descendant;
         this.personID = event.personID;
         this.latitude = event.latitude;
         this.longitude = event.longitude;

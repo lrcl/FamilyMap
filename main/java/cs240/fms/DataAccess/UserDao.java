@@ -26,7 +26,7 @@ public class UserDao {
             statement.setString(4, user.getFirstName());
             statement.setString(5, user.getLastName());
             statement.setString(6, user.getGender());
-            statement.setString(7, user.getPersonId());
+            statement.setString(7, user.getPersonID());
             statement.executeUpdate();
             statement.close();
 
