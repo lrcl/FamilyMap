@@ -8,7 +8,7 @@ import java.io.IOException;
 
 class PersonHandler implements HttpHandler {
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(HttpExchange exchange) throws IOException {
 
     }
 }

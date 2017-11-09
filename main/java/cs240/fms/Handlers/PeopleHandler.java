@@ -25,9 +25,10 @@ class PeopleHandler implements HttpHandler {
         Person[] data =  facade.findPersons(authToken);
         AllPersonsResponse apr = new AllPersonsResponse(data);
         String jsonStr = new Gson().toJson(apr);
-        if(jsonStr == null){
+        if(data == null){
             try {
                 exchange.sendResponseHeaders(HTTP_BAD_REQUEST,0);
+                jsonStr = "{" + "\"message\":" + "\"could not retrieve persons\"" + "}";
             } catch (IOException e) {
                 e.printStackTrace();
             }
