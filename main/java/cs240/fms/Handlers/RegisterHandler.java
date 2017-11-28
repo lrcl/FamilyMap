@@ -34,7 +34,7 @@ class RegisterHandler implements HttpHandler {
         if(registerResponse == null) {
             try {
                 exchange.sendResponseHeaders(HTTP_BAD_REQUEST, 0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             response = "{" + "\"message\": " +  "\"unable to register user\"" + "}";
@@ -43,7 +43,7 @@ class RegisterHandler implements HttpHandler {
         else {
             try {
                 exchange.sendResponseHeaders(HTTP_OK, 0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             response = "{ \"authToken\":" + "\"" + registerResponse.getAuthToken() + "\"" + ","
@@ -56,7 +56,7 @@ class RegisterHandler implements HttpHandler {
         try {
             os.write(response.getBytes());
             os.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

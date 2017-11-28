@@ -57,7 +57,7 @@ class PersonHandler implements HttpHandler {
             if(person ==  null) {
                 try {
                     exchange.sendResponseHeaders(HTTP_BAD_REQUEST,0);
-                    jsonStr = "{" + "\"message\":" + "\"could not retrieve persons\"" + "}";
+                    jsonStr = "{" + "\"message\":" + "\"could not retrieve person\"" + "}";
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

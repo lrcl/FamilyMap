@@ -17,14 +17,15 @@ public class Server {
         try {
             server = HttpServer.create(new InetSocketAddress(Integer.parseInt(portNumber)),MAX_WAITING_CONNECTIONS);
             server.setExecutor(null);
-            server.createContext("/", new FileHandler());
             server.createContext("/user/register", new RegisterHandler());
             server.createContext("/user/login", new LoginHandler());
             server.createContext("/clear", new ClearHandler());
             server.createContext("/fill/", new FillHandler());
             server.createContext("/load", new LoadHandler());
-            server.createContext("/person/", new PersonHandler());
+            server.createContext("/person", new PersonHandler());
             server.createContext("/event/", new EventHandler());
+            server.createContext("/", new FileHandler());
+
 
 
             server.start();

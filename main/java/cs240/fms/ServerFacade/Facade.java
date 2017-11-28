@@ -69,9 +69,17 @@ public class Facade {
         connection = db.openConnection(connection);
         //check if user is registered
         UserDao userDao = new UserDao(connection);
-        if(userDao.getUser(loginInfo.getUsername()) == null)
+        User user = userDao.getUser(loginInfo.getUsername());
+        if(user == null)
             //user is non-existent
             return null;
+        //check if password matches
+        if(!(user.getPassword().equals(loginInfo.getPassword()))) {
+            //password doesn't match
+            return null;
+
+        }
+
         UserAuthDao uad = new UserAuthDao(connection);
         boolean added = uad.addUserAuth(userAuth);
         if (!added) {
