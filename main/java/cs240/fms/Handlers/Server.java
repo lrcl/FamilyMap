@@ -22,7 +22,7 @@ public class Server {
             server.createContext("/clear", new ClearHandler());
             server.createContext("/fill/", new FillHandler());
             server.createContext("/load", new LoadHandler());
-            server.createContext("/person", new PersonHandler());
+            server.createContext("/person/", new PersonHandler());
             server.createContext("/event/", new EventHandler());
             server.createContext("/", new FileHandler());
 

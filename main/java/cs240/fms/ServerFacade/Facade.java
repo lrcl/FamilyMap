@@ -138,6 +138,7 @@ public class Facade {
 
         //generate p1 and p1's events
         Generator g = new Generator();
+        g.loadData();
         Person p1 = g.createPersonFromUser(existingUser);
         Event p1Birth = g.createBirth(0, username, p1.getPersonID());
         Event p1Marriage = g.createMarriage(0, username, p1.getPersonID());

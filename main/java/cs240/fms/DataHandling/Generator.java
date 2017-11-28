@@ -61,7 +61,7 @@ public class Generator {
         return p;
     }
     public Person createPersonFromFile(String username, String gender) {
-        loadData();
+//        loadData();
         Person p = new Person();
         Random r = new Random();
 
@@ -96,7 +96,7 @@ public class Generator {
         return Id;
     }
     public Event createBirth(int gen, String username, String personId) {
-        loadData();
+//        loadData();
         //birth year
         Random r = new Random();
         int offset = r.nextInt(5);
@@ -120,7 +120,7 @@ public class Generator {
     }
     public Double generateLocationInfo() {
         //location
-        loadData();
+//        loadData();
         Random r = new Random();
         int index = r.nextInt(locations.data.length-1);
         String country = locations.data[index].get("country").toString();
@@ -130,7 +130,7 @@ public class Generator {
         return longit;
     }
     public Event createMarriage(int gen, String username, String personId) {
-        loadData();
+//        loadData();
        //year
         Random r = new Random();
         int offset = r.nextInt(5);
@@ -153,7 +153,7 @@ public class Generator {
         return marriage;
     }
     public Event createDeathDate(int gen, String username, String personId) {
-        loadData();
+//        loadData();
         //year
         Random r = new Random();
         int offset = r.nextInt(5);

@@ -26,8 +26,8 @@ class PersonHandler implements HttpHandler {
         String ur = uri.toString();
         StringBuilder sb = new StringBuilder(ur);
         String personId = null;
-        if(ur.length() > 7) {
-            personId = sb.substring(8); //7 or 8?
+        if(ur.length() > 8) {
+            personId = sb.substring(8);
         }
         Facade facade = new Facade();
         String jsonStr = "";

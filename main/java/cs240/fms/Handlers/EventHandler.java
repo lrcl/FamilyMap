@@ -28,7 +28,6 @@ class EventHandler implements HttpHandler {
         String eventId = null;
         if(ur.length() > 7) {
             eventId = sb.substring(7); //7 or 8?
-
         }
         Facade facade = new Facade();
         String jsonStr = "";
