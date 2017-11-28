@@ -25,10 +25,14 @@ class EventHandler implements HttpHandler {
         URI uri = exchange.getRequestURI();
         String ur = uri.toString();
         StringBuilder sb = new StringBuilder(ur);
-        String eventId = sb.substring(7);
+        String eventId = null;
+        if(ur.length() > 7) {
+            eventId = sb.substring(7); //7 or 8?
+
+        }
         Facade facade = new Facade();
         String jsonStr = "";
-        if (eventId.length() == 0) {
+        if (eventId == null) {
             Event[] data = facade.findEvents(authToken);
             AllEventsResponse aer = new AllEventsResponse(data);
             jsonStr = new Gson().toJson(aer);

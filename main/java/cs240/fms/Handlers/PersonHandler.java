@@ -25,11 +25,14 @@ class PersonHandler implements HttpHandler {
         URI uri = exchange.getRequestURI();
         String ur = uri.toString();
         StringBuilder sb = new StringBuilder(ur);
-        String personId = sb.substring(8);
+        String personId = null;
+        if(ur.length() > 7) {
+            personId = sb.substring(8); //7 or 8?
+        }
         Facade facade = new Facade();
         String jsonStr = "";
         //GET ALL PERSONS
-        if(personId.length() == 0) {
+        if(personId == null) {
             Person[] data =  facade.findPersons(authToken);
             AllPersonsResponse apr = new AllPersonsResponse(data);
             jsonStr = new Gson().toJson(apr);
