@@ -1,7 +1,6 @@
 package cs240.fms.ServerFacade;
 
 import cs240.fms.Models.Person;
-import java.util.ArrayList;
 
 public class AllPersonsResponse {
 

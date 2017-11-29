@@ -46,10 +46,7 @@ class RegisterHandler implements HttpHandler {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            response = "{ \"authToken\":" + "\"" + registerResponse.getAuthToken() + "\"" + ","
-                    + "\"userName\":" + "\"" + registerResponse.getUsername() + "\"" + ","
-                    + "\"personID\":" + "\"" + registerResponse.getPersonId() + "\"" + "}";
-
+            response = new Gson().toJson(registerResponse);
         }
 
         OutputStream os = exchange.getResponseBody();

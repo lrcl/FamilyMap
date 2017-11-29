@@ -1,6 +1,5 @@
 package cs240.fms.ServerFacade;
 
-import java.util.ArrayList;
 import cs240.fms.Models.Event;
 
 public class AllEventsResponse {
