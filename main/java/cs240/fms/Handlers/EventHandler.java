@@ -37,7 +37,7 @@ class EventHandler implements HttpHandler {
             jsonStr = new Gson().toJson(aer);
             if (data == null) {
                 try {
-                    exchange.sendResponseHeaders(HTTP_BAD_REQUEST, 0);
+                    exchange.sendResponseHeaders(HTTP_OK, 0);
                     jsonStr = "{" + "\"message\":" + "\"could not retrieve events\"" + "}";
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -56,7 +56,7 @@ class EventHandler implements HttpHandler {
             jsonStr = new Gson().toJson(event);
             if(event == null) {
                 try {
-                    exchange.sendResponseHeaders(HTTP_BAD_REQUEST,0);
+                    exchange.sendResponseHeaders(HTTP_OK, 0);
                     jsonStr = "{" + "\"message\":" + "\"could not retrieve event\"" + "}";
                 } catch (IOException e) {
                     e.printStackTrace();

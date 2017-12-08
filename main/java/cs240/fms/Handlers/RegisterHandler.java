@@ -33,7 +33,7 @@ class RegisterHandler implements HttpHandler {
         String response = "";
         if(registerResponse == null) {
             try {
-                exchange.sendResponseHeaders(HTTP_BAD_REQUEST, 0);
+                exchange.sendResponseHeaders(HTTP_OK, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }

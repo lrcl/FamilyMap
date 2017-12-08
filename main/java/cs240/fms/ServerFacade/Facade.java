@@ -118,6 +118,7 @@ public class Facade {
             //invalid generation parameter
             return false;
         }
+        int requestedGenerations = fillInfo.getGenerations();
         Database db = new Database();
         Connection connection = null;
         connection = db.openConnection(connection);
@@ -151,17 +152,18 @@ public class Facade {
         }
         //using a queue, create and match each generation of people with events
         int sum = peopleSum(fillInfo.getGenerations());
-        if(!matchPeopleWithEvents(g, pd, ed, username, p1, sum))
+        if(!matchPeopleWithEvents(g, pd, ed, username, p1, sum, requestedGenerations))
             return false;
 
         return true;
     }
-    private boolean matchPeopleWithEvents(Generator g, PersonDao pd, EventDao ed, String username, Person p1, int sum){
+    private boolean matchPeopleWithEvents(Generator g, PersonDao pd, EventDao ed, String username, Person p1, int sum, int requestedGens){
 
         BlockingQueue<Person> personQueue = new LinkedBlockingQueue<Person>();
         personQueue.add(p1);
         int i = 0;
         int gen = 1;
+        int peopleInGen = 0;
         while(i < sum) {
             try {
                 Person child = personQueue.take();
@@ -173,37 +175,50 @@ public class Facade {
                 //match spouseIds
                 mother.setSpouseID(father.getPersonID());
                 father.setSpouseID(mother.getPersonID());
+                if(gen == requestedGens) {
+                    mother.setFatherID(null);
+                    mother.setMotherID(null);
+                    father.setFatherID(null);
+                    father.setMotherID(null);
+                    //update child info
+                    pd.updateMotherId(null, child);
+                    pd.updateFatherId(null, child);
 
-                //birth events for each parent
-                Event birth1 = g.createBirth(gen, username, mother.getPersonID());
-                ed.addEvent(birth1);
-                Event birth2 = g.createBirth(gen, username, father.getPersonID());
-                ed.addEvent(birth2);
-                //mother and father have same marriage event
-                Event marriage = g.createMarriage(gen, username, mother.getPersonID());
-                Event marriage2 = new Event(marriage);
-                marriage2.setEventId(g.createId());
-                marriage2.setPersonID(father.getPersonID());
-                ed.addEvent(marriage);
-                ed.addEvent(marriage2);
-                //death events
-                Event death1 = g.createDeathDate(gen,username,mother.getPersonID());
-                ed.addEvent(death1);
-                Event death2 = g.createDeathDate(gen,username,father.getPersonID());
-                ed.addEvent(death2);
+                }
+                else {
+                    //birth events for each parent
+                    Event birth1 = g.createBirth(gen, username, mother.getPersonID());
+                    ed.addEvent(birth1);
+                    Event birth2 = g.createBirth(gen, username, father.getPersonID());
+                    ed.addEvent(birth2);
+                    //mother and father have same marriage event
+                    Event marriage = g.createMarriage(gen, username, mother.getPersonID());
+                    Event marriage2 = new Event(marriage);
+                    marriage2.setEventId(g.createId());
+                    marriage2.setPersonID(father.getPersonID());
+                    ed.addEvent(marriage);
+                    ed.addEvent(marriage2);
+                    //death events
+                    Event death1 = g.createDeathDate(gen, username, mother.getPersonID());
+                    ed.addEvent(death1);
+                    Event death2 = g.createDeathDate(gen, username, father.getPersonID());
+                    ed.addEvent(death2);
 
-                //update child info
-                pd.updateMotherId(mother.getPersonID(), child);
-                pd.updateFatherId(father.getPersonID(), child);
-                //add to database
-               //pd.addPerson(mother);
-                //pd.addPerson(father);
-                //put on queue
-                personQueue.add(mother);
-                personQueue.add(father);
+                    //update child info
+                    pd.updateMotherId(mother.getPersonID(), child);
+                    pd.updateFatherId(father.getPersonID(), child);
+                    //add to database
+                    //pd.addPerson(mother);
+                    //pd.addPerson(father);
+                    //put on queue
+                    personQueue.add(mother);
+                    personQueue.add(father);
+                }
                 i ++; //make sure this works
-                if((double)i > Math.pow(2,(double)gen)){
+                peopleInGen++;
+                if((double)peopleInGen > Math.pow(2,(double)gen)){
                     gen++;
+                    peopleInGen = 0;
                 }
 
             } catch (InterruptedException e) {
